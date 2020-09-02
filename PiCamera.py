@@ -8,7 +8,7 @@ import sys
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (320, 240)
-camera.framerate = 32
+camera.framerate = 60
 rawCapture = PiRGBArray(camera, size=(320, 240))
 FaceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
