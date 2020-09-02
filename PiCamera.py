@@ -10,7 +10,7 @@ camera = PiCamera()
 camera.resolution = (640, 480)
 camera.framerate = 32
 rawCapture = PiRGBArray(camera, size=(640, 480))
-FaceCascade = c2v.CascadeClassifier('haarcascade_frontalface_default.xml')
+FaceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
 # allow the camera to warmup
 time.sleep(0.1)
