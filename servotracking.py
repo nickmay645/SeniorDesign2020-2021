@@ -19,8 +19,8 @@ horizontal = GPIO.PWM(servoPIN0, 50) # GPIO 17 for PWM with 50Hz
 vertical = GPIO.PWM(servoPIN1, 50) # GPIO 27 for PWM with 50Hz
 
 # Initialization
-horizontal.start(2.5) 
-vertical.start(2.5)
+# horizontal.start(2.5) 
+# vertical.start(2.5)
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
