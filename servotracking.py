@@ -5,22 +5,29 @@ import time
 import cv2
 import RPi.GPIO as GPIO
 
-#Declaration of GPIO pins for servos
-servoPIN0 = 17
-servoPIN1 = 27
+import pigpio
 
-#Mode set for servos
-GPIO.setmode(GPIO.BCM)
+pi = pigpio.pi()
 
-GPIO.setup(servoPIN0, GPIO.OUT)
-GPIO.setup(servoPIN1, GPIO.OUT)
+# #Declaration of GPIO pins for servos
+# servoPIN0 = 17
+# servoPIN1 = 27
 
-vertical = GPIO.PWM(servoPIN0, 50) # GPIO 17 for PWM with 50Hz
-horizontal = GPIO.PWM(servoPIN1, 50) # GPIO 27 for PWM with 50Hz
+# #Mode set for servos
+# GPIO.setmode(GPIO.BCM)
 
-# Initialization
-horizontal.start(10) 
-vertical.start(10)
+# GPIO.setup(servoPIN0, GPIO.OUT)
+# GPIO.setup(servoPIN1, GPIO.OUT)
+
+# vertical = GPIO.PWM(servoPIN0, 50) # GPIO 17 for PWM with 50Hz
+# horizontal = GPIO.PWM(servoPIN1, 50) # GPIO 27 for PWM with 50Hz
+
+# # Initialization
+# horizontal.start(10) 
+# vertical.start(10)
+
+pi.set_servo_pulsewidth(17, 1500) # position anti-clockwise
+pi.set_servo_pulsewidth(27, 1500) # position anti-clockwise
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -41,7 +48,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     for (x,y,w,h) in faces:
         cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
         if x < 320:
-            horizontal.ChangeDutyCycle(5)
+            pi.set_servo_pulsewidth(17, 1000) # position anti-clockwise
 
 
 
