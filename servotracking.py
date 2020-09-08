@@ -54,20 +54,20 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     for (x,y,w,h) in faces:
         cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
         if x < 220:
-            if horizontalvalue >= 500:
+            if horizontalvalue <= 2400:
                 horizontalvalue = horizontalvalue + 100
             pi.set_servo_pulsewidth(27, horizontalvalue) # position anti-clockwise
         elif x >= 420:
-            if horizontalvalue <= 2500:
+            if horizontalvalue >= 100:
                 horizontalvalue = horizontalvalue - 100
             pi.set_servo_pulsewidth(27, horizontalvalue) # position anti-clockwise
         
         # if y < 180:
-        #     if verticalvalue >= 500:
+        #     if verticalvalue >= 100:
         #         verticalvalue = verticalvalue - 10
         #     pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
         # elif y >= 300:
-        #     if verticalvalue <= 2500:
+        #     if verticalvalue <= 2400:
         #         verticalvalue = verticalvalue + 10
         #     pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
 
