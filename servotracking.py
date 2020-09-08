@@ -30,7 +30,7 @@ pi = pigpio.pi()
 # vertical.start(10)
 
 pi.set_servo_pulsewidth(17, 1500) # position anti-clockwise
-pi.set_servo_pulsewidth(27, 1800) # position anti-clockwise
+pi.set_servo_pulsewidth(27, 2500) # position anti-clockwise
 
 horizontalvalue = 1500
 verticalvalue = 1500
@@ -55,20 +55,20 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
         if x < 150:
             if horizontalvalue >= 0:
-                horizontalvalue = horizontalvalue - 10
+                horizontalvalue = horizontalvalue - 100
             pi.set_servo_pulsewidth(27, horizontalvalue) # position anti-clockwise
         elif x >= 490:
             if horizontalvalue <= 2000:
-                horizontalvalue = horizontalvalue + 10
+                horizontalvalue = horizontalvalue + 100
             pi.set_servo_pulsewidth(27, horizontalvalue) # position anti-clockwise
         
         if y < 50:
             if verticalvalue >= 0:
-                verticalvalue = verticalvalue - 10
+                verticalvalue = verticalvalue - 100
             pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
         elif y >= 430:
             if verticalvalue <= 2000:
-                verticalvalue = verticalvalue + 10
+                verticalvalue = verticalvalue + 100
             pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
 
 
