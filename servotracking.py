@@ -5,6 +5,9 @@ import time
 import cv2
 import RPi.GPIO as GPIO
 
+
+
+
 import pigpio
 
 pi = pigpio.pi()
@@ -29,6 +32,9 @@ pi = pigpio.pi()
 pi.set_servo_pulsewidth(17, 1500) # position anti-clockwise
 pi.set_servo_pulsewidth(27, 1500) # position anti-clockwise
 
+horizontalvalue = 1500
+verticalvalue = 1500
+
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (640, 480)
@@ -47,9 +53,23 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     faces = FaceCascade.detectMultiScale(imgGray,1.1,10)
     for (x,y,w,h) in faces:
         cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
-        if x < 320:
-            pi.set_servo_pulsewidth(17, 1000) # position anti-clockwise
-
+        if x < 150:
+            if horizontalvalue >= 0:
+                horizontalvalue = horizontalvalue - 1
+            pi.set_servo_pulsewidth(27, horizontalvalue) # position anti-clockwise
+        elif x >= 490:
+            if horizontalvalue <= 2000:
+                horizontalvalue = horizontalvalue + 1
+            pi.set_servo_pulsewidth(27, horizontalvalue) # position anti-clockwise
+        
+        if y < 50:
+            if verticalvalue >= 0:
+                verticalvalue = verticalvalue - 1
+            pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
+        elif y >= 430:
+            if verticalvalue <= 2000:
+                verticalvalue = verticalvalue + 1
+            pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
 
 
     cv2.imshow("Frame", imgGray)
