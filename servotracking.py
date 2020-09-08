@@ -29,7 +29,7 @@ pi = pigpio.pi()
 # horizontal.start(10) 
 # vertical.start(10)
 
-pi.set_servo_pulsewidth(17, 2000) # vertical
+pi.set_servo_pulsewidth(17, 2500) # vertical
 pi.set_servo_pulsewidth(27, 2000) # horizontal
 
 horizontalvalue = 1500
@@ -53,20 +53,20 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     faces = FaceCascade.detectMultiScale(imgGray,1.1,10)
     for (x,y,w,h) in faces:
         cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
-        if x < 150:
+        if x < 320:
             if horizontalvalue >= 0:
                 horizontalvalue = horizontalvalue - 100
             pi.set_servo_pulsewidth(27, horizontalvalue) # position anti-clockwise
-        elif x >= 490:
+        elif x >= 320:
             if horizontalvalue <= 2000:
                 horizontalvalue = horizontalvalue + 100
             pi.set_servo_pulsewidth(27, horizontalvalue) # position anti-clockwise
         
-        if y < 50:
+        if y < 200:
             if verticalvalue >= 0:
                 verticalvalue = verticalvalue - 100
             pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
-        elif y >= 430:
+        elif y >= 200:
             if verticalvalue <= 2000:
                 verticalvalue = verticalvalue + 100
             pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
