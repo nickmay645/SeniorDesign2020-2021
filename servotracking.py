@@ -19,8 +19,8 @@ vertical = GPIO.PWM(servoPIN0, 50) # GPIO 17 for PWM with 50Hz
 horizontal = GPIO.PWM(servoPIN1, 50) # GPIO 27 for PWM with 50Hz
 
 # Initialization
-horizontal.start(0) 
-vertical.start(0)
+horizontal.start(10) 
+vertical.start(10)
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -41,7 +41,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     for (x,y,w,h) in faces:
         cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
         if x < 320:
-            horizontal.ChangeDutyCycle(0)
+            horizontal.ChangeDutyCycle(5)
 
 
 
