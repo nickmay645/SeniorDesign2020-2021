@@ -29,8 +29,8 @@ pi = pigpio.pi()
 # horizontal.start(10) 
 # vertical.start(10)
 
-pi.set_servo_pulsewidth(17, 1500) # position anti-clockwise
-pi.set_servo_pulsewidth(27, 2500) # position anti-clockwise
+pi.set_servo_pulsewidth(17, 2000) # vertical
+pi.set_servo_pulsewidth(27, 2000) # horizontal
 
 horizontalvalue = 1500
 verticalvalue = 1500
