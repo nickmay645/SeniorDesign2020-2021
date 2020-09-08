@@ -15,12 +15,12 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(servoPIN0, GPIO.OUT)
 GPIO.setup(servoPIN1, GPIO.OUT)
 
-horizontal = GPIO.PWM(servoPIN0, 50) # GPIO 17 for PWM with 50Hz
-vertical = GPIO.PWM(servoPIN1, 50) # GPIO 27 for PWM with 50Hz
+vertical = GPIO.PWM(servoPIN0, 50) # GPIO 17 for PWM with 50Hz
+horizontal = GPIO.PWM(servoPIN1, 50) # GPIO 27 for PWM with 50Hz
 
 # Initialization
-# horizontal.start(2.5) 
-# vertical.start(2.5)
+horizontal.start(180) 
+vertical.start(180)
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -40,7 +40,11 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     faces = FaceCascade.detectMultiScale(imgGray,1.1,10)
     for (x,y,w,h) in faces:
         cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
-        print(x)
+        if x < 320:
+            horizontal.ChangeDutyCycle(0)
+
+
+
     cv2.imshow("Frame", imgGray)
     key = cv2.waitKey(1) & 0xFF
 	# clear the stream in preparation for the next frame
