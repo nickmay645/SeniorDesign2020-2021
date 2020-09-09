@@ -5,6 +5,8 @@ import time
 import cv2
 import pigpio
 
+from datetime import datetime
+
 #links pigpio to the pi
 pi = pigpio.pi()
 
@@ -26,6 +28,9 @@ FaceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 time.sleep(0.1)
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+
+    a = datetime.datetime.now()
+
     # grab the raw NumPy array representing the image, then initialize the timestamp
 	# and occupied/unoccupied text
     image = frame.array
@@ -52,7 +57,15 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         elif y >= 250:
             if verticalvalue <= 2400:
                 verticalvalue = verticalvalue + 100
-            pi.set_servo_pulsewidth(17, verticalvalue) 
+            pi.set_servo_pulsewidth(17, verticalvalue)
+
+    b = datetime.datetime.now()
+
+    c = b - a
+    seconds = c.total_seconds()
+    fps = 1/seconds
+    print(fps)
+
     #displays the viewfinder
     #cv2.imshow("Frame", imgGray)
     key = cv2.waitKey(1) & 0xFF
