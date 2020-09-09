@@ -32,8 +32,8 @@ pi = pigpio.pi()
 pi.set_servo_pulsewidth(17, 2300) # vertical
 pi.set_servo_pulsewidth(27, 2000) # horizontal
 
-horizontalvalue = 1500
-verticalvalue = 1500
+horizontalvalue = 2000
+verticalvalue = 2300
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -53,7 +53,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     faces = FaceCascade.detectMultiScale(imgGray,1.1,10)
     for (x,y,w,h) in faces:
         cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
-        
+
         if x < 220:
             if horizontalvalue <= 2400:
                 horizontalvalue = horizontalvalue + 100
