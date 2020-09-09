@@ -3,37 +3,18 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 import cv2
-import RPi.GPIO as GPIO
-
-
-
-
 import pigpio
 
+#links pigpio to the pi
 pi = pigpio.pi()
 
-# #Declaration of GPIO pins for servos
-# servoPIN0 = 17
-# servoPIN1 = 27
-
-# #Mode set for servos
-# GPIO.setmode(GPIO.BCM)
-
-# GPIO.setup(servoPIN0, GPIO.OUT)
-# GPIO.setup(servoPIN1, GPIO.OUT)
-
-# vertical = GPIO.PWM(servoPIN0, 50) # GPIO 17 for PWM with 50Hz
-# horizontal = GPIO.PWM(servoPIN1, 50) # GPIO 27 for PWM with 50Hz
-
-# # Initialization
-# horizontal.start(10) 
-# vertical.start(10)
-
-pi.set_servo_pulsewidth(17, 2300) # vertical
-pi.set_servo_pulsewidth(27, 2000) # horizontal
-
-horizontalvalue = 2000
+#initial values
 verticalvalue = 2300
+horizontalvalue = 2000
+
+#sets intial positions of the servos
+pi.set_servo_pulsewidth(17, verticalvalue)
+pi.set_servo_pulsewidth(27, horizontalvalue) 
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -53,29 +34,29 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     faces = FaceCascade.detectMultiScale(imgGray,1.1,10)
     for (x,y,w,h) in faces:
         cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
+        #Based on the position of the bounding box, the camera will move to keep in centered
 
-        if x < 220:
-            if horizontalvalue <= 2400:
+        #Horizontal detection
+        if x < 220: #min value
+            if horizontalvalue <= 2400: #values of servo must be kept between 500 - 2500
                 horizontalvalue = horizontalvalue + 100
-            pi.set_servo_pulsewidth(27, horizontalvalue) # position anti-clockwise
-        elif x >= 420:
+            pi.set_servo_pulsewidth(27, horizontalvalue) #sends command to servo
+        elif x >= 420: #max value
             if horizontalvalue >= 100:
                 horizontalvalue = horizontalvalue - 100
-            pi.set_servo_pulsewidth(27, horizontalvalue) # position anti-clockwise
-        
-
-        
+            pi.set_servo_pulsewidth(27, horizontalvalue) 
+        #Vertical detection
         if y < 150:
             if verticalvalue >= 100:
                 verticalvalue = verticalvalue - 100
-            pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
+            pi.set_servo_pulsewidth(17, verticalvalue) 
         elif y >= 250:
             if verticalvalue <= 2400:
                 verticalvalue = verticalvalue + 100
-            pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
+            pi.set_servo_pulsewidth(17, verticalvalue) 
 
 
-    cv2.imshow("Frame", imgGray)
+    # cv2.imshow("Frame", imgGray)
     key = cv2.waitKey(1) & 0xFF
 	# clear the stream in preparation for the next frame
     rawCapture.truncate(0)
