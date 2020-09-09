@@ -35,7 +35,6 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     for (x,y,w,h) in faces:
         cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
         #Based on the position of the bounding box, the camera will move to keep in centered
-
         #Horizontal detection
         if x < 220: #min value
             if horizontalvalue <= 2400: #values of servo must be kept between 500 - 2500
@@ -54,11 +53,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
             if verticalvalue <= 2400:
                 verticalvalue = verticalvalue + 100
             pi.set_servo_pulsewidth(17, verticalvalue) 
-
-
-    # cv2.imshow("Frame", imgGray)
+    #displays the viewfinder
+    cv2.imshow("Frame", imgGray)
     key = cv2.waitKey(1) & 0xFF
-	# clear the stream in preparation for the next frame
+	# clears the stream in preparation for the next frame
     rawCapture.truncate(0)
 	# if the `q` key was pressed, break from the loop
     if key == ord("q"):
