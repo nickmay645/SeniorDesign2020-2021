@@ -63,11 +63,13 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
                 horizontalvalue = horizontalvalue - 100
             pi.set_servo_pulsewidth(27, horizontalvalue) # position anti-clockwise
         
+
+        
         if y < 180:
             if verticalvalue >= 100:
                 verticalvalue = verticalvalue - 100
             pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
-        elif y >= 300:
+        elif y >= 180:
             if verticalvalue <= 2400:
                 verticalvalue = verticalvalue + 100
             pi.set_servo_pulsewidth(17, verticalvalue) # position anti-clockwise
