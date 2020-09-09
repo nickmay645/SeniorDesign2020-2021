@@ -29,7 +29,7 @@ time.sleep(0.1)
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 
-    a = datetime.datetime.now()
+    a = datetime.now()
 
     # grab the raw NumPy array representing the image, then initialize the timestamp
 	# and occupied/unoccupied text
@@ -59,7 +59,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
                 verticalvalue = verticalvalue + 100
             pi.set_servo_pulsewidth(17, verticalvalue)
 
-    b = datetime.datetime.now()
+    b = datetime.now()
 
     c = b - a
     seconds = c.total_seconds()
