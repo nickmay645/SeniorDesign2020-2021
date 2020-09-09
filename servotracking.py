@@ -2,6 +2,7 @@
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 from datetime import datetime
+from gpiozero import CPUTemperature
 import time
 import cv2
 import pigpio
@@ -67,8 +68,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     c = b - a
     seconds = c.total_seconds()
     fps = 1/seconds
-    # print(fps,end='\r')
     print("FPS: {:0.2f}".format(fps),end='\r')
+
+    cpu = CPUTemperature()
+    print(cpu.temperature,end='\r')
 
 
     #displays the viewfinder
