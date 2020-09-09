@@ -68,11 +68,12 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     c = b - a
     seconds = c.total_seconds()
     fps = 1/seconds
-    print("FPS: {:0.2f}".format(fps),end='\r')
+    # print("FPS: {:0.2f}".format(fps),end='\r')
 
     cpu = CPUTemperature()
-    print("\n CPU Temperature: ",cpu.temperature,end='\r')
+    # print("\n CPU Temperature: ",cpu.temperature,end='\r')
 
+    print("FPS: {:0.2f}\nTemperature: {}\n".format(fps, cpu.temperature),end='\r')
 
     #displays the viewfinder
     #cv2.imshow("Frame", imgGray)
