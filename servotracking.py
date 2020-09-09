@@ -60,11 +60,11 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
             pi.set_servo_pulsewidth(17, verticalvalue)
 
     b = datetime.now()
-
+    #calculates fps
     c = b - a
     seconds = c.total_seconds()
     fps = 1/seconds
-    print(fps)
+    print(fps,end='\r')
 
     #displays the viewfinder
     #cv2.imshow("Frame", imgGray)
