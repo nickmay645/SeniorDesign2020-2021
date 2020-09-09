@@ -43,8 +43,11 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         #Horizontal detection
         if x < 220: #min value
             if horizontalvalue <= 2400: #values of servo must be kept between 500 - 2500
-                horizontalvalue = horizontalvalue + 100
-            pi.set_servo_pulsewidth(27, horizontalvalue) #sends command to servo
+                #horizontalvalue = horizontalvalue + 100
+                for horizontalvalue in range(100):
+                    horizontalvalue = horizontalvalue + 5
+                    pi.set_servo_pulsewidth(27, horizontalvalue) #sends command to servo
+            #pi.set_servo_pulsewidth(27, horizontalvalue) #sends command to servo
         elif x >= 420: #max value
             if horizontalvalue >= 100:
                 horizontalvalue = horizontalvalue - 100
