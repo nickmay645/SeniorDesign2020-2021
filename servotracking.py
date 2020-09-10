@@ -49,9 +49,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         #Based on the position of the bounding box, the camera will move to keep in centered
 
         #if nothing is detected for 5 seconds reset back to initial position
-
-
-
+        # magic code that will work eventually 
 
         #Horizontal detection
         if x < 220: #min value
@@ -85,10 +83,11 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     fps = 1/seconds
 
     #prints data to terminal
-    print("FPS: {:0.0f} Temperature: {:0.2f} C ".format(fps, cpu.temperature),end='\r')
+    print("FPS: {:0.0f} \n Temperature: {:0.2f} C ".format(fps, cpu.temperature),end='\r')
 
     #displays the viewfinder
     # cv2.imshow("Frame", imgGray)
+
     key = cv2.waitKey(1) & 0xFF
 	# clears the stream in preparation for the next frame
     rawCapture.truncate(0)
