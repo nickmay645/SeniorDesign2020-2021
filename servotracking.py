@@ -26,9 +26,9 @@ pi.set_servo_pulsewidth(horizontalpin, horizontalvalue)
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
-camera.resolution = (640, 480)
+camera.resolution = (1280, 720)
 camera.framerate = 32
-rawCapture = PiRGBArray(camera, size=(640, 480))
+rawCapture = PiRGBArray(camera, size=(1280, 720))
 FaceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 # allow the camera to warmup
 time.sleep(0.1)
