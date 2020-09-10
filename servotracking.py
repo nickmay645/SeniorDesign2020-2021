@@ -8,17 +8,20 @@ import cv2
 import pigpio
 import os
 
+#constants
+verticalvalue = 2300
+horizontalvalue = 2000
+verticalpin = 14
+horizontalpin = 15
+horizontalresolution = 1280
+verticalresolution = 720
+setfps = 32
+
 #runs pigpiod
 os.system("sudo pigpiod")
 
 #links pigpio to the pi
 pi = pigpio.pi()
-
-#initial values
-verticalvalue = 2300
-horizontalvalue = 2000
-verticalpin = 14
-horizontalpin = 15
 
 #sets intial positions of the servos
 pi.set_servo_pulsewidth(verticalpin, verticalvalue)
@@ -26,10 +29,11 @@ pi.set_servo_pulsewidth(horizontalpin, horizontalvalue)
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
-camera.resolution = (1280, 720)
-camera.framerate = 32
-rawCapture = PiRGBArray(camera, size=(1280, 720))
+camera.resolution = (horizontalresolution, verticalresolution)
+camera.framerate = setfps
+rawCapture = PiRGBArray(camera, size=(horizontalresolution, verticalresolution))
 FaceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+
 # allow the camera to warmup
 time.sleep(0.1)
 # capture frames from the camera
@@ -50,6 +54,9 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 
         #if nothing is detected for 5 seconds reset back to initial position
         # magic code that will work eventually 
+
+        #Have it record the time when a face is registered ->> (when x is printed) and set that to a variable
+        #if the current time is more than 10 seconds from the originally set value, issue a reset command to set servos to initial position (make that reset state a function)
 
         #Horizontal detection
         if x < 220: #min value
@@ -82,8 +89,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     seconds = c.total_seconds()
     fps = 1/seconds
 
-    #prints data to terminal
-    print("FPS: {:0.0f} \n Temperature: {:0.2f} C ".format(fps, cpu.temperature),end='\r')
+    #prints status to terminal
+    print("FPS: {:0.0f} Temperature: {:0.2f} C ".format(fps, cpu.temperature),end='\r')
 
     #displays the viewfinder
     # cv2.imshow("Frame", imgGray)
