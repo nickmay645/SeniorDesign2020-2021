@@ -35,6 +35,7 @@ time.sleep(0.1)
 # capture frames from the camera
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 
+    #time at start of frame
     a = datetime.now()
 
     # grab the raw NumPy array representing the image, then initialize the timestamp
@@ -44,8 +45,16 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     imgGray = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
     faces = FaceCascade.detectMultiScale(imgGray,1.1,10)
     for (x,y,w,h) in faces:
-        cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
+        # cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
         #Based on the position of the bounding box, the camera will move to keep in centered
+
+        print(x)
+
+        #if nothing is detected for 5 seconds reset back to initial position
+
+
+
+
         #Horizontal detection
         if x < 220: #min value
             if horizontalvalue <= 2400: #values of servo must be kept between 500 - 2500
@@ -65,20 +74,23 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
                 verticalvalue = verticalvalue + 100
             pi.set_servo_pulsewidth(verticalpin, verticalvalue)
 
+
+    #fetches CPU temperature
+    cpu = CPUTemperature()
+
+    #time at end of frame
     b = datetime.now()
+
     #calculates fps
     c = b - a
     seconds = c.total_seconds()
     fps = 1/seconds
-    # print("FPS: {:0.2f}".format(fps),end='\r')
 
-    cpu = CPUTemperature()
-    # print("\n CPU Temperature: ",cpu.temperature,end='\r')
-
-    print("FPS: {:0.2f} Temperature: {:0.2f}C".format(fps, cpu.temperature),end='\r')
+    #prints data to terminal
+    print("FPS: {} Temperature: {:0.2f}C".format(fps, cpu.temperature),end='\r')
 
     #displays the viewfinder
-    cv2.imshow("Frame", imgGray)
+    # cv2.imshow("Frame", imgGray)
     key = cv2.waitKey(1) & 0xFF
 	# clears the stream in preparation for the next frame
     rawCapture.truncate(0)
