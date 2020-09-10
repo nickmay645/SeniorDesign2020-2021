@@ -48,8 +48,6 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         # cv2.rectangle(imgGray,(x,y),(x+w,y+h),(255,0.255),2)
         #Based on the position of the bounding box, the camera will move to keep in centered
 
-        print(x)
-
         #if nothing is detected for 5 seconds reset back to initial position
 
 
@@ -87,7 +85,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     fps = 1/seconds
 
     #prints data to terminal
-    print("FPS: {} Temperature: {:0.2f}C".format(fps, cpu.temperature),end='\r')
+    print("FPS: {:0.0f} Temperature: {:0.2f} C ".format(fps, cpu.temperature),end='\r')
 
     #displays the viewfinder
     # cv2.imshow("Frame", imgGray)
