@@ -19,8 +19,8 @@ verticalvalue = 2300
 horizontalvalue = 2000
 
 #sets intial positions of the servos
-pi.set_servo_pulsewidth(17, verticalvalue)
-pi.set_servo_pulsewidth(27, horizontalvalue) 
+pi.set_servo_pulsewidth(14, verticalvalue)
+pi.set_servo_pulsewidth(15, horizontalvalue) 
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
