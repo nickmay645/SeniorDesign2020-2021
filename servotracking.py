@@ -17,10 +17,12 @@ pi = pigpio.pi()
 #initial values
 verticalvalue = 2300
 horizontalvalue = 2000
+verticalpin = 14
+horizontalpin = 15
 
 #sets intial positions of the servos
-pi.set_servo_pulsewidth(14, verticalvalue)
-pi.set_servo_pulsewidth(15, horizontalvalue) 
+pi.set_servo_pulsewidth(verticalpin, verticalvalue)
+pi.set_servo_pulsewidth(horizontalpin, horizontalvalue) 
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
@@ -48,20 +50,20 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
         if x < 220: #min value
             if horizontalvalue <= 2400: #values of servo must be kept between 500 - 2500
                 horizontalvalue = horizontalvalue + 100
-            pi.set_servo_pulsewidth(27, horizontalvalue) #sends command to servo
+            pi.set_servo_pulsewidth(horizontalpin, horizontalvalue) #sends command to servo
         elif x >= 420: #max value
             if horizontalvalue >= 100:
                 horizontalvalue = horizontalvalue - 100
-            pi.set_servo_pulsewidth(27, horizontalvalue) 
+            pi.set_servo_pulsewidth(horizontalpin, horizontalvalue) 
         #Vertical detection
         if y < 150:
             if verticalvalue >= 100:
                 verticalvalue = verticalvalue - 100
-            pi.set_servo_pulsewidth(17, verticalvalue) 
+            pi.set_servo_pulsewidth(verticalpin, verticalvalue) 
         elif y >= 250:
             if verticalvalue <= 2400:
                 verticalvalue = verticalvalue + 100
-            pi.set_servo_pulsewidth(17, verticalvalue)
+            pi.set_servo_pulsewidth(verticalpin, verticalvalue)
 
     b = datetime.now()
     #calculates fps
