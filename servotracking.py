@@ -13,8 +13,8 @@ verticalvalue = 2300
 horizontalvalue = 2000
 verticalpin = 14
 horizontalpin = 15
-horizontalresolution = 1280
-verticalresolution = 720
+horizontalresolution = 640
+verticalresolution = 480
 setfps = 32
 
 #runs pigpiod
