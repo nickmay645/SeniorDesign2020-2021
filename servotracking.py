@@ -11,8 +11,8 @@ import os
 #constants
 verticalvalue = 2300
 horizontalvalue = 2000
-verticalpin = 14
-horizontalpin = 15
+verticalpin = 25
+horizontalpin = 27
 horizontalresolution = 640
 verticalresolution = 480
 setfps = 32
