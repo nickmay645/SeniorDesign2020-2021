@@ -10,7 +10,7 @@ import os
 
 #constants
 verticalvalue = 2300
-horizontalvalue = 2000
+horizontalvalue = 1000
 verticalpin = 25
 horizontalpin = 27
 horizontalresolution = 640
