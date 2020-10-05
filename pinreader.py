@@ -9,7 +9,4 @@ GPIO.setup(INPUT_PIN, GPIO.IN)           # Set our input pin to be an input
 
 # Start a loop that never ends
 while True: 
-           if (GPIO.input(INPUT_PIN) == True): # Physically read the pin now
-                    print('3.3')
-           else:
-                    print('0')
+    print(GPIO.input(INPUT_PIN))
