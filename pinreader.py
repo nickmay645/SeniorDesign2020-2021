@@ -13,4 +13,3 @@ while True:
                     print('3.3')
            else:
                     print('0')
-           sleep(1);           # Sleep for a full second before restarting our loop
