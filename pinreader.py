@@ -14,4 +14,4 @@ while True:
     counter = counter + 1
     if counter == 16:
         counter = 0
-        print("\n")
+        print(" ")
