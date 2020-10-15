@@ -1,4 +1,10 @@
+#Interconnect Diagram:
+#S -> GPIO 26 on Pi
+#V -> 5V on Pi
+#G -> GND on Pi
+
 import RPi.GPIO as GPIO
+
 GPIO.setmode(GPIO.BCM) # GPIO Numbers instead of board numbers
  
 RELAYGPIO = 26
