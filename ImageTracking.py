@@ -5,7 +5,7 @@ from datetime import datetime
 cap = cv2.VideoCapture(0)
 FaceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
-while(True):
+while True:
     a = datetime.now()
     # Capture frame-by-frame
     ret, frame = cap.read()
