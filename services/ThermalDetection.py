@@ -19,7 +19,7 @@ adjust position if needed
 """
 
 
-class ThermalDetection:
+class ThermalDetection(object):
 
     def __init__(self):
         """ Runs at the creation of the class object. """
@@ -39,6 +39,7 @@ class ThermalDetection:
         self.vis_fps = 32
         self.vis_capture = None
         self.vis_frame = None
+        self.face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
     def initializeCamera(self):
         """ Initializes the Pi Camera """
@@ -59,9 +60,29 @@ class ThermalDetection:
 
         return self.vis_camera.capture(self.vis_capture, format="bgr", use_video_port=True)
 
+    def captureThermalFrame(self):
+        """ Captures a frame from the thermal camera """
+        return 0
 
+    def checkForFaces(self, frame):
+        """ """
+        pass
 
     def run(self):
-        """ Runs each step of system continuously """
+        """ Runs each step of system continuously
+
+        1 Clock Cycle
+            Step 1. Capture frame from visual camera
+            Step 2. Capture frame from thermal camera
+            Step 3. Check for face
+            Step 4. Get thermal data from face location
+            Step 5. Check Thermal to update led, speaker, and door
+            Step 6. Check if servos need to be adjusted.
+
+        """
+        
+        vis_frame = self.captureVisFrame()
+        thermal_frame = self.captureThermalFrame()
+        self.checkForFaces(vis_frame)
 
         pass
