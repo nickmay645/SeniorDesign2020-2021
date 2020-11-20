@@ -56,7 +56,7 @@ class ThermalDetection(object):
         # self.count_threshold = 5
         # self.temp_threshold = 100.00
 
-    def initializeVisCamera(self):
+    def initialize_vis_camera(self):
         """ Initializes the Pi Camera """
 
         self.vis_camera.resolution = (self.vis_horizontal_resolution, self.vis_vertical_resolution)
@@ -64,7 +64,8 @@ class ThermalDetection(object):
         self.vis_capture = PiRGBArray(self.vis_camera,
                                       size=(self.vis_horizontal_resolution, self.vis_vertical_resolution))
 
-    def initializeThermalCamera(self):
+    @staticmethod
+    def initialize_thermal_camera():
 
         file_path = "ThermalRead/leptonic/bin/examples"
         resp = os.system("cd %s" % file_path)
@@ -74,18 +75,18 @@ class ThermalDetection(object):
         resp = os.system(run_command)
         print("`%s` ran with exit code %d" % (run_command, resp))
 
-    def initializeServos(self):
+    def initialize_servos(self):
         """ Initializes the Tracking Servos """
 
         self.pi.set_servo_pulsewidth(self.servo_vertical_pin, self.servo_vertical_value)
         self.pi.set_servo_pulsewidth(self.servo_horizontal_pin, self.servo_horizontal_value)
 
-    def captureVisFrame(self):
+    def capture_vis_frame(self):
         """ Captures a frame from the visual camera """
 
         return self.vis_camera.capture(self.vis_capture, format="bgr", use_video_port=True)
 
-    def captureThermalFrame(self):
+    def capture_thermal_frame(self):
         """ Gets the thermal data from the IR camera """
         # TODO Define Text Path Variable at class init
         file = open("text.txt", "r")
@@ -103,39 +104,11 @@ class ThermalDetection(object):
         file.close()
         return reshaped_array
 
-        # pixel_data = [1000, 2000, 3000, 4000, 5000]
-        # j = 0
-        #
-        # while self.non_fever_count == 1:
-        #     with open("C:\\Users\\ptssm\\Documents\\GitHub\\leptonic\\examples\\output.txt") as fp:
-        #         for i, line in enumerate(fp):
-        #             if i == pixel_data[j]:
-        #                 if float(line) < self.temp_threshold:
-        #                     self.non_fever_count = self.non_fever_count + 1
-        #                 else:
-        #                     self.fever_count = self.fever_count + 1
-        #
-        #                 if j < len(pixel_data):
-        #                     j = j + 1
-        #                 else:
-        #                     j = 0
-        #
-        #                 if self.fever_count == self.count_threshold:
-        #                     print("Fever detected.")
-        #                     self.fever_count = 0
-        #                     self.non_fever_count = 0
-        #                     self.non_fever_count = 0
-        #                     j = 0
-        #                 elif self.non_fever_count == self.count_threshold:
-        #                     print("No fever detected.")
-        #                     self.fever_count = 0
-        #                     self.non_fever_count = 0
-        #                     self.non_fever_count = 0
-        #                     j = 0
-        #         return 0
-
-    def checkForFaces(self, frame):
+    def check_for_faces(self, frame):
         """ """
+        image = frame.array
+        img_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        faces = self.face_cascade.detectMultiScale(img_gray, 1.1, 10)
         pass
 
     def run(self):
@@ -151,8 +124,8 @@ class ThermalDetection(object):
 
         """
 
-        vis_frame = self.captureVisFrame()
-        thermal_frame = self.captureThermalFrame()
-        self.checkForFaces(vis_frame)
+        vis_frame = self.capture_vis_frame()
+        thermal_frame = self.capture_thermal_frame()
+        self.check_for_faces(vis_frame)
 
         pass
