@@ -1,22 +1,35 @@
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+from matplotlib import animation
 from numpy import array
 
-if __name__ == '__main__':
-
-    f = open("text.txt", "r")
+def getarray():
+    f = open("output.txt", "r")
     a = f.read()
     a = a.replace("\n","").split(" ")
-    for i in range(0, len(a)):
-        a[i] = float(a[i])
+    if len(a) == 19201 and a is not None:
+        for i in range(0, len(a)-1):
+            #print(a[i])
+            a[i] = float(a[i])
+        n = 160
+        newList = [a[i:i + n] for i in range(0, len(a)-1, n)]
+        nArray = array(newList,dtype='float')
+        a11 = nArray.reshape(120, 160)
+        return a11
 
-    n = 160
-    newList = [a[i:i + n] for i in range(0, len(a), n)]
-    nArray = array(newList)
-    print(nArray)
+def animate(self):
+    a = getarray()
+    if a is not None:
+        im.set_data(a)
+        return im
 
-    a11 = nArray.reshape(120, 160)
-    plt.imshow(a11, cmap='hot')
-    plt.colorbar()
+
+if __name__ == '__main__':
+    fig = plt.figure()
+    data = getarray()
+    im = plt.imshow(data,cmap='hot')
+    
+    anim = animation.FuncAnimation(fig,animate,interval=100)
+
     plt.show()
 
