@@ -6,6 +6,9 @@ import cv2
 import sys
 import math
 
+import ThermalPlot
+import LED
+
 class RaspCam:
 
     def __init__(self):
@@ -13,6 +16,8 @@ class RaspCam:
         self.thermalx = 0
         self.thermaly = 0
         toggle = False
+
+        count = 0
 
         # initialize the camera and grab a reference to the raw camera capture
         camera = PiCamera()
@@ -36,10 +41,15 @@ class RaspCam:
                 self.thermalx = math.floor((x + (w/2))/4)
                 self.thermaly = math.floor((y + (h/4))/4)
                 cv2.rectangle(imgGray,(self.thermalx*4,self.thermaly*4),(self.thermalx*4+1,self.thermaly*4+1),(255,0.255),2)
-                if x != 0:
-                    toggle = True
-            if toggle is True:
-                break
+                ThermalPlot.ThermalData(self.thermalx,self.thermaly)
+               
+                #code for verifying that its actually a face,
+                #creates a buffer to avoid and accidental face detections
+                # if x != 0 and count == 15:
+                #     count = 0
+                #     print(ThermalPlot.ThermalData(self.thermalx,self.thermaly))
+                # else:
+                #     count = count + 1
             
             cv2.imshow("Frame", imgGray)
             key = cv2.waitKey(1) & 0xFF

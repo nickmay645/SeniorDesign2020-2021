@@ -3,6 +3,8 @@ import matplotlib.image as mpimg
 from matplotlib import animation
 from numpy import array
 
+import LED
+
 class ThermalData:
     def __init__(self,x,y):
         
@@ -22,12 +24,14 @@ class ThermalData:
                 nArray = array(newList,dtype='float')
                 a11 = nArray.reshape(120, 160)
                 
-                print(self.thermalx)
-                print(self.thermaly)
-                self.thermalpoint = a11[self.thermalx,self.thermaly]
-                print(self.thermalpoint)
+                thermalvalue = a11[self.thermalx,self.thermaly]
+                print(thermalvalue)
+                if thermalvalue > 70.00: #temp value (replace when position is callibrated)
+                    LED.LEDToggle(1) #toggles green LED
+                else:
+                    LED.LEDToggle(0) #toggles red LED
 
-
+        
                 return a11
 
         def animate(self):
@@ -40,11 +44,13 @@ class ThermalData:
         
         fig = plt.figure()
         data = getarray()
-        im = plt.imshow(data,cmap='hot')
+        # im = plt.imshow(data,cmap='inferno')
         
-        anim = animation.FuncAnimation(fig,animate)
+        # anim = animation.FuncAnimation(fig,animate)
 
-        plt.show()
+        # plt.show()
+
+        
 
         
         
