@@ -8,6 +8,7 @@ import sys, time, threading, cv2
 import queue as Queue
 import startcam
 import math
+import logging
 
 VERSION = "Automated COVID-19 Temperature Sensor"
 
@@ -18,6 +19,7 @@ DISP_MSEC   = 50                # Delay between display cycles
 CAP_API     = cv2.CAP_ANY       # API: CAP_ANY or CAP_DSHOW etc...
 EXPOSURE    = 0                 # Zero for automatic exposure
 TEXT_FONT   = QFont("Courier", 18)
+TEXT_FONT.setBold(True)
 
 camera_num  = 1                 # Default camera (first in list)
 image_queue = Queue.Queue()     # Queue to hold images
@@ -85,8 +87,10 @@ class MyWindow(QMainWindow):
         self.displays.addWidget(self.disp)
         self.vlayout.addLayout(self.displays)
         self.label1 = QLabel("Forehead Temperature",self)
+        self.label1.setFont(TEXT_FONT)
         self.label2 = QLabel("N/A",self)
         self.label3 = QLabel("Door Status",self)
+        self.label3.setFont(TEXT_FONT)
         self.label4 = QLabel("N/A",self)
 
         self.vlayout.addWidget(self.label1)
@@ -129,14 +133,14 @@ class MyWindow(QMainWindow):
                     self.thermalx = math.floor((x + (w/2))/4)
                     self.thermaly = math.floor((y + (h/4))/4)
                     cv2.rectangle(img,(self.thermalx*4,self.thermaly*4),(self.thermalx*4+1,self.thermaly*4+1),(255,0.255),2)
-                    instance = ThermalPlot.ThermalData(self.thermalx,self.thermaly)
+                    instance = ThermalPlot.ThermalData(self.thermalx, self.thermaly)
                     if instance.data != None:
                         self.label2.setText(str(instance.data)+"°F")
-                        if instance.data > 70.0:
+                        if instance.data < 91.13:
                             self.label4.setText("Unlocked")
-                            Relay.RelayToggle()
-                            self.label4.setText("Locked")
-                self.label2.setText("N/A")
+                        # #Relay.RelayToggle()
+                        # self.label4.setText("Locked")
+                # self.label2.setText("N/A")
                             
                 self.display_image(img, display, scale)
 
@@ -172,13 +176,4 @@ if __name__ == '__main__':
         win.setWindowTitle(VERSION)
         win.start()
         sys.exit(app.exec_())
-
-
-
-
-
-    
-    
-    
-    
 
