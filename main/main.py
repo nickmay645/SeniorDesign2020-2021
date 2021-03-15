@@ -8,11 +8,11 @@ import sys, time, threading, cv2
 import queue as Queue
 import startcam
 import math
-import logging
+import RPi.GPIO as GPIO
 
 VERSION = "Automated COVID-19 Temperature Sensor"
 
-IMG_SIZE    = 640,480          # 640,480 or 1280,720 or 1920,1080
+IMG_SIZE    = 640,480          
 IMG_FORMAT  = QImage.Format_RGB888
 DISP_SCALE  = 1                # Scaling factor for display image
 DISP_MSEC   = 50                # Delay between display cycles
@@ -26,7 +26,28 @@ image_queue = Queue.Queue()     # Queue to hold images
 capturing   = True              # Flag to indicate capturing
 FaceCascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
+count = 0
 
+
+#LED GPIO
+RED_LED = 16
+GREEN_LED = 20
+
+#RELAY GPIO
+RELAY_LED = 27
+
+#initialize LEDS
+GPIO.setmode(GPIO.BCM) # GPIO Numbers instead of board numbers
+GPIO.setup(RED_LED, GPIO.OUT) # GPIO Assign mode
+GPIO.setup(GREEN_LED, GPIO.OUT) # GPIO Assign mode
+
+#intialize Relay
+GPIO.setup(RELAY_LED, GPIO.OUT) # GPIO Assign mode
+
+#sets initial values to low
+GPIO.output(RED_LED, GPIO.HIGH) # red on
+GPIO.output(GREEN_LED, GPIO.LOW) # green off
+GPIO.output(RELAY_LED, GPIO.LOW) # relay off
 
 # Grab images from the camera (separate thread)
 def grab_images(cam_num, queue,input):
@@ -48,6 +69,7 @@ def grab_images(cam_num, queue,input):
         cap.release()
     elif input == 1:
         startcam.startthermal()
+
 
 # Image widget
 class ImageWidget(QWidget):
@@ -88,10 +110,10 @@ class MyWindow(QMainWindow):
         self.vlayout.addLayout(self.displays)
         self.label1 = QLabel("Forehead Temperature",self)
         self.label1.setFont(TEXT_FONT)
-        self.label2 = QLabel("N/A",self)
+        self.label2 = QLabel("N/A",self) #forehead temp
         self.label3 = QLabel("Door Status",self)
         self.label3.setFont(TEXT_FONT)
-        self.label4 = QLabel("N/A",self)
+        self.label4 = QLabel("N/A",self) #door status
 
         self.vlayout.addWidget(self.label1)
         self.vlayout.addWidget(self.label2)
@@ -118,31 +140,54 @@ class MyWindow(QMainWindow):
         for index in range(2):    
             self.capture_thread = threading.Thread(target=grab_images, 
                         args=(camera_num, image_queue, index))
-            self.capture_thread.start()         
+            self.capture_thread.start() 
+                
+    #controls external devices
+    def external(self):
+        GPIO.output(RED_LED, GPIO.LOW) # red off
+        GPIO.output(GREEN_LED, GPIO.HIGH) # green on
+        GPIO.output(RELAY_LED, GPIO.HIGH) # relay on
+
+        time.sleep(10) #gives person time to open the door
+        
+        GPIO.output(RED_LED, GPIO.HIGH) # red on
+        GPIO.output(GREEN_LED, GPIO.LOW) # green off
+        GPIO.output(RELAY_LED, GPIO.LOW) # relay off
+        return
         
 
     # Fetch camera image from queue, and display it
     def show_image(self, imageq, display, scale):
+        global count
         if not imageq.empty():
             image = imageq.get()
             if image is not None and len(image) > 0:
                 img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                 faces = FaceCascade.detectMultiScale(img,1.1,10)
-                for (x,y,w,h) in faces:
-                    self.toggle = True
-                    self.thermalx = math.floor((x + (w/2))/4)
-                    self.thermaly = math.floor((y + (h/4))/4)
-                    cv2.rectangle(img,(self.thermalx*4,self.thermaly*4),(self.thermalx*4+1,self.thermaly*4+1),(255,0.255),2)
-                    instance = ThermalPlot.ThermalData(self.thermalx, self.thermaly)
-                    if instance.data != None:
-                        self.label2.setText(str(instance.data)+"°F")
-                        if instance.data < 91.13:
-                            self.label4.setText("Unlocked")
-                        # #Relay.RelayToggle()
-                        # self.label4.setText("Locked")
-                # self.label2.setText("N/A")
-                            
+                if faces== ():
+                    self.label2.setText("Searching...")
+                    self.label4.setText("Locked")
+                else:
+                    for (x,y,w,h) in faces:
+                        self.toggle = True
+                        self.thermalx = math.floor((x + (w/2))/4)
+                        self.thermaly = math.floor((y + (h/4))/4)
+                        instance = ThermalPlot.ThermalData(self.thermalx, self.thermaly)
+                        if instance.data != None:
+                            self.label2.setText(str(instance.data)+"°F")
+                            if instance.data < 98.60 and instance.data > 96.5:
+                                count += 1
+                                cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),2)
+                                if count == 9:
+                                    self.label4.setText("Unlocked")
+                                    count = 0
+                                    time.sleep(1)
+                                    self.external()
+                            else:
+                                cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+                #display the frame
                 self.display_image(img, display, scale)
+                
 
     # Display an image, reduce size if required
     def display_image(self, img, display, scale=1):
